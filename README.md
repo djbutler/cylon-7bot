@@ -13,7 +13,6 @@
 #### Part II: Installing Cylon 7bot on your computer
 
 1. Install [Node.js](https://nodejs.org/en/download/).
-
 2. Clone this repository to your computer and install its dependencies by running the following command in the terminal:
 
     ```bash
