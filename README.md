@@ -25,7 +25,7 @@
 
 For a super simple demo, run:
 
-```node app.js```
+```node simple-demo.js```
 
 The arm base should rotate back and forth between 45 and 135 degrees.
 
