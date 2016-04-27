@@ -1,6 +1,6 @@
 ## Cylon 7bot
 
-### Dependencies
+### Installation 
 
 #### Part I: Installing firmware on your 7bot
 
@@ -12,17 +12,12 @@
 
 #### Part II: Installing Cylon 7bot on your computer
 
-1. Clone this repository to your computer by running the following command in the terminal:
+1. Install [Node.js](https://nodejs.org/en/download/).
+
+2. Clone this repository to your computer and install its dependencies by running the following command in the terminal:
 
     ```bash
     git clone https://github.com/djbutler/cylon-7bot.git
-    ```
-
-2. Install [Node.js](https://nodejs.org/en/download/).
-
-3. Install the Node.js dependencies for this package:
-
-    ```bash
     cd cylon-7bot
     npm install
     ```
