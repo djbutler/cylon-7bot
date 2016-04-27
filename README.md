@@ -2,7 +2,13 @@
 
 ## Dependencies
 
-First install "Standard Firmata" on your 7bot. This can be done by downloading the [Arduino IDE](https://www.arduino.cc/en/Main/Software) version 1.6 or greater, opening `File -> Examples -> Firmata -> StandardFirmata`, and pressing the `Upload` button.
+### Part I: Installing firmware on your 7bot
+
+1. Download the [Arduino IDE](https://www.arduino.cc/en/Main/Software) version 1.6 or greater.
+2. Install support for the Arduino Due by opening `Tools -> Board -> Boards Manager` and selecting the Due.
+3. Connect the 7bot to your computer via the USB cable.
+4. Select the Due board from the menu `Tools -> Board`.
+5. Install the firmware by opening `File -> Examples -> Firmata -> StandardFirmata`, and pressing the `Upload` button.
 
 Next, clone this repository to your computer by running the following command in the terminal:
 
@@ -17,7 +23,7 @@ cd cylon-7bot
 npm install
 ```
 
-You may have to change the serial port name, which is currently hard-coded in `app.js`. To find out the name of your serial port, one useful tool is [Gort](http://gort.io/). Once you've installed Gort, you can run `gort scan serial` to get a list of your serial connections. Try a few until you find the right one!
+NOTE: You may have to change the serial port name, which is currently hard-coded in `app.js`. To find out the name of your serial port, one useful tool is [Gort](http://gort.io/). Once you've installed Gort, you can run `gort scan serial` to get a list of your serial connections. Try a few until you find the right one!
 
 ## Usage
 
