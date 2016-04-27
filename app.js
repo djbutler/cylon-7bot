@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 
 Below is some information about which pins control which servos (aka joints).
@@ -23,36 +25,33 @@ Right Button; Readout D70
 
 */
 
-
 var Cylon = require('cylon');
 
 Cylon.robot({
+  name: '7bot',
+
   connections: {
     arduino: { adaptor: 'firmata', port: '/dev/cu.usbmodemfd121' }
   },
 
   devices: {
-    // pin D2 is the base servo
-    servo: { driver: 'servo', pin: 7 }
+    joint0: { driver: 'servo', pin: 2 },
+    joint1: { driver: 'servo', pin: 3 },
+    joint2: { driver: 'servo', pin: 4 },
+    joint3: { driver: 'servo', pin: 5 },
+    joint4: { driver: 'servo', pin: 6 },
+    joint5: { driver: 'servo', pin: 7 },
   },
 
-  work: function(my) {
-    var angle = 0;
-    var increasing = true;
-    every(10, function() {
-        if (angle > 135) {
-            increasing = false;
-        }
-        if (angle < 45) {
-            increasing = true;
-        }
-        if (increasing) {
-            angle += 1;
-        } else {
-            angle -= 1;
-        }
-        my.servo.angle(angle);
-    }); 
+  work: function() {
+    // interact with robot via socket API from the browser
   }
-}).start();
+});
 
+Cylon.api('socketio',
+{
+  host: '0.0.0.0',
+  port: '3000'
+});
+
+Cylon.start();
