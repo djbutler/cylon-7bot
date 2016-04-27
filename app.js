@@ -45,6 +45,7 @@ Cylon.robot({
 
   work: function() {
     // interact with robot via socket API from the browser
+    // See: frontend/app/src/x-app.html
   }
 });
 
