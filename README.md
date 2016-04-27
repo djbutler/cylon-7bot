@@ -29,6 +29,19 @@ For a super simple demo, run:
 
 The arm base should rotate back and forth between 45 and 135 degrees.
 
+For a slightly more interesting demo, run:
+
+```node app.js```
+
+and in another terminal, run:
+
+```
+cd frontend/app
+python -m SimpleHTTPServer
+```
+
+Then visit [http://localhost:8000/] to see the app in action. You can control the angle of each joint by moving a slider.
+
 NOTE: You may have to change the serial port name, which is currently hard-coded in `app.js`. To find out the name of your serial port, one useful tool is [Gort](http://gort.io/). Once you've installed Gort, you can run `gort scan serial` to get a list of your serial connections. Try a few until you find the right one!
 
 ---
