@@ -33,7 +33,7 @@ Cylon.robot({
 
   devices: {
     // pin D2 is the base servo
-    servo: { driver: 'servo', pin: 2 }
+    servo: { driver: 'servo', pin: 7 }
   },
 
   work: function(my) {
