@@ -1,5 +1,9 @@
 ## Cylon 7bot
 
+Cylon 7bot is a GUI and Javascript interface for controlling the 7bot robot arm. It's completely unofficial, so use at your own risk.
+
+[![Screenshot](https://raw.githubusercontent.com/djbutler/cylon-7bot/master/images/sliders-screenshot.png "The slider interface in action")](https://youtu.be/TGK0B03KznM)
+
 ### Installation 
 
 #### Part I: Installing firmware on your 7bot
