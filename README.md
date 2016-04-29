@@ -17,7 +17,7 @@ Cylon 7bot is a GUI and Javascript interface for controlling the 7bot robot arm.
 #### Part II: Installing Cylon 7bot on your computer
 
 1. Install [Git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org/en/download/).
-2. Run the following command in the terminal (the last line may take a while):
+2. Run the following commands in the terminal (the last line may take a while):
 
     ```bash
     git clone https://github.com/djbutler/cylon-7bot.git
