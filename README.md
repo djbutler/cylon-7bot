@@ -11,13 +11,13 @@ Cylon 7bot is a GUI and Javascript interface for controlling the 7bot robot arm.
 1. Download the [Arduino IDE](https://www.arduino.cc/en/Main/Software) version 1.6 or greater.
 2. Install support for the Arduino Due by opening `Tools -> Board -> Boards Manager` and installing `Arduino SAM Boards`.
 3. Connect the 7bot to your computer via the USB cable.
-4. Select the Due board from the menu `Tools -> Board -> Arduino Due (Programming Port)`.
+4. Select the Arduino Due board by clicking `Tools -> Board -> Arduino Due (Programming Port)`.
 5. Install the firmware by opening `File -> Examples -> Firmata -> StandardFirmata`, and pressing the `Upload` button.
 
 #### Part II: Installing Cylon 7bot on your computer
 
 1. Install [Node.js](https://nodejs.org/en/download/).
-2. Clone this repository to your computer and install its dependencies by running the following command in the terminal:
+2. Run the following command in the terminal (the last line may take a while):
 
     ```bash
     git clone https://github.com/djbutler/cylon-7bot.git
