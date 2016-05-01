@@ -1,0 +1,37 @@
+{
+  "name": "tween.js",
+  "homepage": "https://github.com/tweenjs/tween.js",
+  "authors": [
+    "tween.js contributors"
+  ],
+  "description": "Super simple, fast and easy to use tweening engine which incorporates optimised Robert Penner's equations.",
+  "main": "src/Tween.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "tween",
+    "interpolation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "assets",
+    "docs",
+    "examples",
+    ".*"
+  ],
+  "version": "16.3.4",
+  "_release": "16.3.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v16.3.4",
+    "commit": "6cb21f23975d0230499a11e567d6c954815dd7f2"
+  },
+  "_source": "https://github.com/sole/tween.js.git",
+  "_target": "^16.3.4",
+  "_originalSource": "tweenjs",
+  "_direct": true
+}
