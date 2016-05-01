@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <!--
 
@@ -44,12 +45,14 @@ Left Nav + View
 
         <!-- Main Content -->
         <div class="content">
+            <paper-button id="snapshot" raised>Take Snapshot</paper-button>
             <paper-slider id="joint0" class="joint" value="90" max="180" editable></paper-slider>
             <paper-slider id="joint1" class="joint" value="90" max="180" editable></paper-slider>
             <paper-slider id="joint2" class="joint" value="90" max="180" editable></paper-slider>
             <paper-slider id="joint3" class="joint" value="90" max="180" editable></paper-slider>
             <paper-slider id="joint4" class="joint" value="90" max="180" editable></paper-slider>
             <paper-slider id="joint5" class="joint" value="90" max="180" editable></paper-slider>
+            <paper-slider id="joint6" class="joint" value="90" max="180" editable></paper-slider>
         </div>
 
       </paper-header-panel>
@@ -74,9 +77,24 @@ Left Nav + View
       }
 
       document.addEventListener('WebComponentsReady', function () {
+          // slider event handlers
           for (var i = 0; i < 6; i++) {
               createSliderListener(i);
           }
+          // snapshot event handler
+          /*
+              device.on('analogRead', function(value) {
+                console.log('Analog read ==>', value);
+              });
+
+          document.querySelector('#snapshot').addEventListener('click', function(e) {
+              for (var i = 0; i < 6; i++) {
+                  var jointsensor = io('http://127.0.0.1:3000/api/robots/7bot/devices/jointsensor' + i);
+                  var joint_slider = document.querySelector('#joint' + i);
+                  joint_slider.value = (jointsensor.analogRead() - 450) / 2 + 90 ;
+              }
+          });
+          */
       });
 
   </script>
