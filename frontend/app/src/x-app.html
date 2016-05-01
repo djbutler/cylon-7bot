@@ -71,8 +71,13 @@ Left Nav + View
       function createSliderListener(i) {
           var joint = io('http://127.0.0.1:3000/api/robots/7bot/devices/joint' + i);
           var joint_slider = document.querySelector('#joint' + i);
+          // update on slider drag
           joint_slider.addEventListener('immediate-value-change', function() {
               joint.emit('angle', joint_slider.immediateValue);
+          });
+          // update on slider mouseup or text entry
+          joint_slider.addEventListener('value-change', function() {
+              joint.emit('angle', joint_slider.value);
           });
           joints.push(joint);
       }
