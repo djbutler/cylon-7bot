@@ -50,6 +50,13 @@ Then visit [http://localhost:8000/](http://localhost:8000/) to see the app in ac
 
 You may have to change the serial port name, which is currently hard-coded in `app.js`. To find out the name of your serial port, one useful tool is [Gort](http://gort.io/). Once you've installed Gort, you can run `gort scan serial` to get a list of your serial connections. Try a few until you find the right one!
 
+### Developers
+
+The app is very barebones right now, and not organized in a sophisticated way.
+
+The backend code lives in `app.js`. The frontend code lives in `frontend/app/src/x-app.html`. 
+
+At this stage, I would be very open to reorganizing the code to make it more readable, maintainable, modular, etc. Please do make pull requests!
 
 ---
 
