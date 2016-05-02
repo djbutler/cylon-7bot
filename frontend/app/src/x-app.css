@@ -21,7 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 }
 
 paper-slider.joint {
-    width: 400px;
+    width: 350px;
     height: 35px;
     --paper-slider-knob-start-color: var(--google-blue-700); 
     --paper-slider-knob-start-border-color: var(--google-blue-700); 

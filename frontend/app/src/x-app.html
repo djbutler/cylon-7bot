@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
 
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
@@ -16,7 +17,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <!--
 
@@ -45,17 +50,47 @@ Left Nav + View
 
         <!-- Main Content -->
         <div class="content">
-            <paper-button id="snapshot" raised>Take Snapshot</paper-button>
-            <paper-slider id="joint0" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint1" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint2" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint3" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint4" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint5" class="joint" value="90" max="180" editable></paper-slider>
-            <paper-slider id="joint6" class="joint" value="90" max="180" editable></paper-slider>
+            <style is="custom-style">
+                .flex {
+                    @apply(--layout-horizontal);
+                }
+            </style>
+            <div class="flex">
+                <div id="sliders">
+                    <paper-slider id="joint0" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint1" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint2" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint3" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint4" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint5" class="joint" value="90" max="180" editable></paper-slider>
+                    <paper-slider id="joint6" class="joint" value="90" max="180" editable></paper-slider>
+                </div>
+                <div style="padding:10px">
+                    <paper-button id="recordpose" style="margin-left:0px" raised><iron-icon icon="av:playlist-add"></iron-icon> Add</paper-button>
+                    <paper-button id="playposes" raised><iron-icon icon="av:playlist-play"></iron-icon> Play</paper-button>
+                    <paper-button id="clearposes" style="margin-right:0px" raised><iron-icon icon="icons:delete"></iron-icon> Clear</paper-button>
+                    <paper-listbox style="margin-top:10px; overflow: scroll; height: 200px">
+                        <template is="dom-repeat" items="{{poses}}">
+                        <paper-item>
+                        <table>
+                            <tr>
+                                <td>[[item.joint0]]</td>
+                                <td>[[item.joint1]]</td>
+                                <td>[[item.joint2]]</td>
+                                <td>[[item.joint3]]</td>
+                                <td>[[item.joint4]]</td>
+                                <td>[[item.joint5]]</td>
+                                <td>[[item.joint6]]</td>
+                            </tr>
+                        </table>
+                        </paper-item>
+                        </template>
+                    </paper-listbox>
+                </div>
+            </div>
         </div>
 
-      </paper-header-panel>
+        </paper-header-panel>
 
     </paper-drawer-panel>
 
@@ -66,7 +101,22 @@ Left Nav + View
   <script src="../bower_components/tween.js/src/Tween.js"></script>
 
   <script>
+      var N_SLIDERS = 7;
+      var UPDATE_RATE = 10;
+
       var joints = [];
+      var poses = [];
+      var app;
+
+      var sevenbot = {};
+      sevenbot.updatePose = function () {
+          console.log('updatePose()');
+          for (var i = 0; i < N_SLIDERS; i++) {
+              var joint_slider = document.querySelector('#joint' + i);
+              joint_slider.value = sevenbot.pose['joint' + i];
+          }
+      };
+
 
       function createSliderListener(i) {
           var joint = io('http://127.0.0.1:3000/api/robots/7bot/devices/joint' + i);
@@ -82,11 +132,70 @@ Left Nav + View
           joints.push(joint);
       }
 
+      function getSliderValue(joint_idx) {
+          var joint_slider = document.querySelector('#joint' + joint_idx);
+          return joint_slider.immediateValue;
+      }
+
+      function getCurrentPose() {
+          var pose = {};
+          for (var i = 0; i < N_SLIDERS; i++) {          
+              pose['joint' + i] = getSliderValue(i);
+          }
+          return pose;
+      }
+
+      function clearPoses() {
+          poses.splice(0, poses.length);
+          app.clearPoses();
+      }
+
+      function playPoses() {
+          console.log('playPoses()');
+          sevenbot.pose = getCurrentPose();
+          var tween = new TWEEN.Tween(sevenbot.pose);
+          var lastTween = tween;
+          for (var i = 0; i < poses.length; i++) {
+              var poseTween = new TWEEN.Tween(sevenbot.pose)
+                        .to(poses[i], 1000)
+                        .easing(TWEEN.Easing.Cubic.InOut)
+                        .onUpdate(function() { sevenbot.updatePose(); });
+              lastTween.chain(poseTween);
+              lastTween = poseTween;
+          }
+          console.log('tween.start()');
+          tween.start();
+      }
+
+      function recordPose() {
+          var pose = getCurrentPose();
+          poses.push(pose);
+          app.addPose(pose);
+      }
+
+      function animate() {
+          TWEEN.update();
+          setTimeout(animate, UPDATE_RATE);
+      }
+
       document.addEventListener('WebComponentsReady', function () {
-          // slider event handlers
-          for (var i = 0; i < 6; i++) {
+          // app
+          app = document.querySelector('x-app');
+          // recordpose button
+          document.querySelector('#recordpose').addEventListener('click', recordPose);
+          // playposes button
+          document.querySelector('#playposes').addEventListener('click', playPoses);
+          // clearposes button
+          document.querySelector('#clearposes').addEventListener('click', clearPoses);
+          // clearposes button
+          // sliders
+          for (var i = 0; i < N_SLIDERS; i++) {
               createSliderListener(i);
           }
+          // sevenbot
+          sevenbot.pose = getCurrentPose();
+          animate();
+
           // snapshot event handler
           /*
               device.on('analogRead', function(value) {
@@ -108,9 +217,19 @@ Left Nav + View
   <script>
 
     Polymer({
-
-      is: 'x-app'
-
+        is: 'x-app',
+        properties: {
+            poses: {
+                type: Array,
+                value: [],
+            },
+        },
+        addPose: function(pose) {
+            this.push('poses', pose);
+        },
+        clearPoses: function(pose) {
+            this.splice('poses', 0, this.poses.length);
+        },
     });
 
   </script>
