@@ -32,5 +32,6 @@ paper-toolbar {
 }
 
 .content {
+    padding:20px
   /* height: 600px; */
 }

@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
@@ -57,6 +58,7 @@ Left Nav + View
             </style>
             <div class="flex">
                 <div id="sliders">
+                    <paper-toggle-button id="pump" style="margin: 10px">Pump</paper-toggle-button>
                     <paper-slider id="joint0" class="joint" value="90" max="180" editable></paper-slider>
                     <paper-slider id="joint1" class="joint" value="90" max="180" editable></paper-slider>
                     <paper-slider id="joint2" class="joint" value="90" max="180" editable></paper-slider>
@@ -74,13 +76,14 @@ Left Nav + View
                         <paper-item>
                         <table>
                             <tr>
-                                <td>[[item.joint0]]</td>
-                                <td>[[item.joint1]]</td>
-                                <td>[[item.joint2]]</td>
-                                <td>[[item.joint3]]</td>
-                                <td>[[item.joint4]]</td>
-                                <td>[[item.joint5]]</td>
-                                <td>[[item.joint6]]</td>
+                                <td>[[item.joints.joint0]]</td>
+                                <td>[[item.joints.joint1]]</td>
+                                <td>[[item.joints.joint2]]</td>
+                                <td>[[item.joints.joint3]]</td>
+                                <td>[[item.joints.joint4]]</td>
+                                <td>[[item.joints.joint5]]</td>
+                                <td>[[item.joints.joint6]]</td>
+                                <td>[[item.pumpOn]]</td>
                             </tr>
                         </table>
                         </paper-item>
@@ -104,32 +107,46 @@ Left Nav + View
       var N_SLIDERS = 7;
       var UPDATE_RATE = 10;
 
-      var joints = [];
+      var joint_sockets = [];
       var poses = [];
       var app;
+      var robot_socket;
 
       var sevenbot = {};
-      sevenbot.updatePose = function () {
-          console.log('updatePose()');
+      sevenbot.updateJoints = function () {
+          console.log('updateJoints()');
           for (var i = 0; i < N_SLIDERS; i++) {
               var joint_slider = document.querySelector('#joint' + i);
-              joint_slider.value = sevenbot.pose['joint' + i];
+              joint_slider.value = sevenbot.pose.joints['joint' + i];
           }
       };
 
+      sevenbot.updatePump = function () {
+          document.querySelector('#pump').active = sevenbot.pose.pumpOn;
+          setPump();
+      }
+
+      function setPump() {
+          var active = document.querySelector('#pump').active;
+          if (active) {
+              robot_socket.emit('turn_pump_on');
+          } else {
+              robot_socket.emit('turn_pump_off');
+          }
+      }
 
       function createSliderListener(i) {
-          var joint = io('http://127.0.0.1:3000/api/robots/7bot/devices/joint' + i);
+          var joint_socket = io('http://127.0.0.1:3000/api/robots/7bot/devices/joint' + i);
           var joint_slider = document.querySelector('#joint' + i);
           // update on slider drag
           joint_slider.addEventListener('immediate-value-change', function() {
-              joint.emit('angle', joint_slider.immediateValue);
+              joint_socket.emit('angle', joint_slider.immediateValue);
           });
           // update on slider mouseup or text entry
           joint_slider.addEventListener('value-change', function() {
-              joint.emit('angle', joint_slider.value);
+              joint_socket.emit('angle', joint_slider.value);
           });
-          joints.push(joint);
+          joint_sockets.push(joint_socket);
       }
 
       function getSliderValue(joint_idx) {
@@ -137,10 +154,17 @@ Left Nav + View
           return joint_slider.immediateValue;
       }
 
+      function getPumpOn() {
+          return document.querySelector('#pump').active;
+      }
+
       function getCurrentPose() {
-          var pose = {};
+          var pose = {
+              joints: {},
+              pumpOn: getPumpOn(),
+          };
           for (var i = 0; i < N_SLIDERS; i++) {          
-              pose['joint' + i] = getSliderValue(i);
+              pose.joints['joint' + i] = getSliderValue(i);
           }
           return pose;
       }
@@ -153,13 +177,17 @@ Left Nav + View
       function playPoses() {
           console.log('playPoses()');
           sevenbot.pose = getCurrentPose();
-          var tween = new TWEEN.Tween(sevenbot.pose);
+          var tween = new TWEEN.Tween(sevenbot.pose.joints);
           var lastTween = tween;
           for (var i = 0; i < poses.length; i++) {
-              var poseTween = new TWEEN.Tween(sevenbot.pose)
-                        .to(poses[i], 1000)
+              var poseTween = new TWEEN.Tween(sevenbot.pose.joints)
+                        .to(poses[i].joints, 1000)
                         .easing(TWEEN.Easing.Cubic.InOut)
-                        .onUpdate(function() { sevenbot.updatePose(); });
+                        .onUpdate(function () { sevenbot.updateJoints(); })
+                        .onStart(function (pumpOn) { return function () {
+                            sevenbot.pose.pumpOn = pumpOn;
+                            sevenbot.updatePump();
+                        }}(poses[i].pumpOn));
               lastTween.chain(poseTween);
               lastTween = poseTween;
           }
@@ -181,13 +209,15 @@ Left Nav + View
       document.addEventListener('WebComponentsReady', function () {
           // app
           app = document.querySelector('x-app');
+          robot_socket = io('http://127.0.0.1:3000/api/robots/7bot');
           // recordpose button
           document.querySelector('#recordpose').addEventListener('click', recordPose);
           // playposes button
           document.querySelector('#playposes').addEventListener('click', playPoses);
           // clearposes button
           document.querySelector('#clearposes').addEventListener('click', clearPoses);
-          // clearposes button
+          // pump
+          document.querySelector('#pump').addEventListener('change', setPump);
           // sliders
           for (var i = 0; i < N_SLIDERS; i++) {
               createSliderListener(i);

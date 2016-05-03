@@ -48,12 +48,32 @@ Cylon.robot({
     jointsensor3: { driver: 'analogSensor', pin: 3, lowerLimit: 100, upperLimit: 900 },
     jointsensor4: { driver: 'analogSensor', pin: 4, lowerLimit: 100, upperLimit: 900 },
     jointsensor5: { driver: 'analogSensor', pin: 5, lowerLimit: 100, upperLimit: 900 },
+    pumpvalve: { driver: 'led', pin: 10 },
+    pumpmotor: { driver: 'led', pin: 11 },
   },
 
   work: function() {
     // interact with robot via socket API from the browser
     // See: frontend/app/src/x-app.html
-  }
+  },
+
+  commands: function() {
+    return {
+      turn_pump_on: this.turnPumpOn,
+      turn_pump_off: this.turnPumpOff,
+    };
+  },
+
+  turnPumpOn: function() {
+    this.pumpmotor.turnOn();
+    this.pumpvalve.turnOff();
+  },
+
+  turnPumpOff: function() {
+    this.pumpmotor.turnOff();
+    this.pumpvalve.turnOn();
+  },
+
 });
 
 Cylon.api('socketio',
