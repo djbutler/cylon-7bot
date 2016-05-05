@@ -25,13 +25,16 @@ Right Button; Readout D70
 
 */
 
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
 var Cylon = require('cylon');
 
 Cylon.robot({
   name: '7bot',
 
   connections: {
-    arduino: { adaptor: 'firmata', port: '/dev/cu.usbmodemfd121' }
+    arduino: { adaptor: 'firmata', port: config.port }
   },
 
   devices: {
