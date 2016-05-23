@@ -4,13 +4,13 @@ To begin, fire up a local server from inside the `app` directory. Please make su
 
 ## Firing up a server using Python
 
-If you are a Windows user, install Python and from inside the `app` directory run:
+If you are a Windows/Mac/*nix user, install Python 3 and from inside the `app` directory run:
 
 ```
-python -m http.server 8080
+python3 -m http.server 8080
 ```
 
-or on a Mac/*nix machine, run:
+or if you have Python 2 already installed (typically available on Mac/*nix), you can run:
 
 ```
 python -m SimpleHTTPServer 8080
